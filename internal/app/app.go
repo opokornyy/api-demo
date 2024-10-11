@@ -9,16 +9,16 @@ import (
 	"sync"
 	"time"
 
-	"api-demo/internal/config"
-	"api-demo/internal/controller"
-	"api-demo/internal/model"
-	"api-demo/internal/repository"
-
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"api-demo/internal/config"
+	"api-demo/internal/controller"
+	"api-demo/internal/model"
+	"api-demo/internal/repository"
 )
 
 // TODO: add json body parsing/validation --- DONE

@@ -3,10 +3,10 @@ package repository
 import (
 	"errors"
 
-	"api-demo/internal/model"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+
+	"api-demo/internal/model"
 )
 
 // type Database interface {
