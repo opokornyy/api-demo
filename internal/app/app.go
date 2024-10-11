@@ -42,6 +42,7 @@ func Run() {
 		log.Fatal().Msgf("failed to connect to database: %v", err)
 		return
 	}
+	defer conn.Close()
 
 	// TODO: remove later
 	if err := conn.Ping(); err != nil {
