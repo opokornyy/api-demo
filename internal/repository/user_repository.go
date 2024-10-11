@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"errors"
-
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
@@ -33,11 +31,8 @@ func (r *UserRepository) CreateUser(user *model.User) error {
 func (r *UserRepository) GetUser(id uuid.UUID) (*model.User, error) {
 	user := &model.User{ID: id}
 
-	// SELECT * FROM users WHERE id = ?
 	result := r.First(user)
-	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		return nil, result.Error
-	} else if result.Error != nil {
+	if result.Error != nil {
 		return nil, result.Error
 	}
 
