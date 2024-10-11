@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -29,22 +30,13 @@ func NewUserController(repo UserRepository, validate *validator.Validate) *UserC
 }
 
 func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
-	// Parse request body
-	var req schema.CreateUserRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.Error().Err(err).Msgf("invalid json body: %v", err)
-		respondWithError(w, http.StatusBadRequest, "invalid json body")
+	req, err := parseCreateUserBody(r, uc.validate)
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	// Validate request
-	if err := uc.validate.Struct(req); err != nil {
-		log.Error().Err(err).Msgf("validation error: %v", err)
-		respondWithError(w, http.StatusBadRequest, "invalid request")
-		return
-	}
-
-	// Convert request to user
+	// Convert request to user model
 	user, err := convertRequestToUser(req)
 	if err != nil {
 		log.Error().Err(err).Msgf("failed to parse request: %v", err)
@@ -64,9 +56,7 @@ func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
-	// Parse request params
 	id := mux.Vars(r)["id"]
-	log.Info().Msgf("Get user: %s", id)
 
 	// Parse id to uuid
 	uuid, err := uuid.Parse(id)
@@ -88,7 +78,23 @@ func (uc *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
-func convertRequestToUser(req schema.CreateUserRequest) (*model.User, error) {
+func parseCreateUserBody(r *http.Request, validate *validator.Validate) (*schema.CreateUserRequest, error) {
+	var req schema.CreateUserRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Error().Err(err).Msgf("invalid json body: %v", err)
+		return nil, fmt.Errorf("error decoding request: %v", err)
+	}
+
+	// Validate request
+	if err := validate.Struct(req); err != nil {
+		log.Error().Err(err).Msgf("validation error: %v", err)
+		return nil, fmt.Errorf("error validating request: %v", err)
+	}
+
+	return &req, nil
+}
+
+func convertRequestToUser(req *schema.CreateUserRequest) (*model.User, error) {
 	// Parse DateOfBirth from string to time.Time
 	dateOfBirth, err := time.Parse(time.RFC3339, req.DateOfBirth)
 	if err != nil {
