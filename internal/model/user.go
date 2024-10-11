@@ -1,4 +1,4 @@
-package user
+package model
 
 import (
 	"time"
@@ -7,8 +7,8 @@ import (
 )
 
 type User struct {
-	ID          uuid.UUID `json:"id"`
+	ID          uuid.UUID `gorm:"type:uuid;primaryKey" json:"id"`
 	Name        string    `json:"name"`
-	Email       string    `json:"email"`
-	DateOfBirth time.Time `json:"dateOfBirth"` // Use time.Time for date fields?
+	Email       string    `gorm:"unique;not null" json:"email"`
+	DateOfBirth time.Time `json:"dateOfBirth"`
 }

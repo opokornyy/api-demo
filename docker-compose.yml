@@ -20,7 +20,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - 8000:8000
     depends_on:
       - db
   
@@ -30,9 +30,10 @@ services:
       dockerfile: ./Dockerfile
     restart: always
     ports:
-      - 8000:8000
+      - 8080:8080
     depends_on:
       db:
         condition: service_healthy
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/userDb
+      - SERVER_URL=0.0.0.0:8080
