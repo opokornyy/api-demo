@@ -7,5 +7,10 @@ build:
 run:
 	docker run -d -p 8080:8080 api-demo:latest
 
-# TODO: add test target
-# TODO: add migrate target
+.PHONY: integration-test
+integration-test:
+	go test -v ./test/integration
+
+.PHONY: test
+test:
+	go test -v ./test/unit

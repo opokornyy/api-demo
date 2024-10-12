@@ -25,9 +25,9 @@ make integration-test
 make test
 ```
 
-## Create User Request
+## Testing CURLs
 
-### Testing CURLs
+### Create User Request
 
 ```bash
 curl -X "POST" "http://localhost:8080/user" \
