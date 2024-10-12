@@ -3,6 +3,8 @@ package config
 import (
 	"fmt"
 	"os"
+
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -25,6 +27,9 @@ func NewConfig() (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Info().Msgf("Database URL: %s", databaseURL)
+	log.Info().Msgf("Server URL: %s", serverUrl)
 
 	return &Config{
 		DatabaseURL: databaseURL,

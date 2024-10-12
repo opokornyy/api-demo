@@ -16,7 +16,7 @@ import (
 	"api-demo/internal/model"
 )
 
-// MockUserRepository is a mock implementation of UserRepository for testing
+// MockUserRepository
 type MockUserRepository struct {
 	user model.User
 	err  error
@@ -36,14 +36,14 @@ func (m *MockUserRepository) GetUser(id uuid.UUID) (*model.User, error) {
 	return &m.user, m.err
 }
 
+const expectedUser = `{"id":"93789a5f-5ff1-49a9-8e5b-601879bbe522","name":"John Doe","email":"john@doe.com","dateOfBirth":"2000-01-01T00:00:00Z"}`
+
 func TestCreateUser(t *testing.T) {
-	// TODO: maybe move this to a helper function
-	// or even a json file
 	reqBody := schema.CreateUserRequest{
-		ID:          uuid.New(),
+		ID:          uuid.MustParse("93789a5f-5ff1-49a9-8e5b-601879bbe522"),
 		Name:        "John Doe",
 		Email:       "john@doe.com",
-		DateOfBirth: "2000-01-01T00:00:00Z", // Use ISO 8601 format for date
+		DateOfBirth: "2000-01-01T00:00:00Z",
 	}
 
 	reqBodyJSON, err := json.Marshal(reqBody)
@@ -68,16 +68,7 @@ func TestCreateUser(t *testing.T) {
 	// Call the handler with the request and response recorder.
 	handler.ServeHTTP(rr, req)
 
-	if status := rr.Code; status != http.StatusCreated {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusCreated)
-	}
-
-	// Check the response body is what we expect.
-	// TODO: rename the reqBodyJSON to expected
-	// expected := `{"id":"26908e04-868c-4d8e-85f8-6b1284dcf750","name":"Mike Oxlong","email":"mike@oxlong.cz","date_of_birth":"2020-01-01T12:12:34+00:00"}`
-	if rr.Body.String() != string(reqBodyJSON) {
-		t.Errorf("handler returned unexpected body: got %v want %v",
-			rr.Body.String(), reqBodyJSON)
-	}
+	// Assert the status code and response body
+	assert.Equal(t, http.StatusCreated, rr.Code)
+	assert.Equal(t, expectedUser, rr.Body.String())
 }

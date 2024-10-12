@@ -1,0 +1,41 @@
+name: Integration Tests
+on: push
+
+jobs:
+
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16.0-alpine
+        env:
+          POSTGRES_USER: testUser
+          POSTGRES_PASSWORD: passw0rd
+          POSTGRES_DB: userTestDb
+        ports:
+          - 5432:5432  
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Integration Tests
+        run: go test ./tests/integration -v
+        env:
+          DATABASE_URL: postgresql://testUser:passw0rd@localhost:5432/userTestDb
+          SERVER_URL: 0.0.0.0:8080  

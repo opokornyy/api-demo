@@ -52,7 +52,7 @@ func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Info().Msgf("User created: %+v", req)
-	respondWithJSON(w, http.StatusCreated, req)
+	respondWithJSON(w, http.StatusCreated, user)
 }
 
 func (uc *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -96,7 +96,7 @@ func parseCreateUserBody(r *http.Request, validate *validator.Validate) (*schema
 
 func convertRequestToUser(req *schema.CreateUserRequest) (*model.User, error) {
 	// Parse DateOfBirth from string to time.Time
-	dateOfBirth, err := time.Parse(time.RFC3339, req.DateOfBirth)
+	parsedTime, err := time.Parse(time.RFC3339, req.DateOfBirth)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +105,7 @@ func convertRequestToUser(req *schema.CreateUserRequest) (*model.User, error) {
 		ID:          req.ID,
 		Name:        req.Name,
 		Email:       req.Email,
-		DateOfBirth: dateOfBirth,
+		DateOfBirth: parsedTime,
 	}, nil
 }
 
