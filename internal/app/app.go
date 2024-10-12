@@ -21,14 +21,6 @@ import (
 	"api-demo/internal/repository"
 )
 
-// TODO: add json body parsing/validation --- DONE
-
-// TODO: create database connection and pass it to repository --- DONE
-// TODO: implement database with GORM --- ALMOST DONE
-
-// TODO: move database connection to separate function/file
-// TODO: create migration script
-
 func Run() {
 	// Load config
 	config, err := config.NewConfig()
@@ -44,14 +36,6 @@ func Run() {
 	}
 	defer conn.Close()
 
-	// TODO: remove later
-	if err := conn.Ping(); err != nil {
-		log.Fatal().Msgf("failed to ping database: %v", err)
-		return
-	} else {
-		log.Info().Msg("database connection successful")
-	}
-
 	// Create GORM database
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		Conn: conn,
@@ -62,7 +46,6 @@ func Run() {
 	}
 
 	// Migrate database
-	// TODO: move to migration script?
 	if err := db.AutoMigrate(&model.User{}); err != nil {
 		log.Fatal().Msgf("failed to migrate database: %v", err)
 		return

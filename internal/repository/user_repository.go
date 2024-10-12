@@ -7,15 +7,6 @@ import (
 	"api-demo/internal/model"
 )
 
-// type Database interface {
-// 	Create(interface{}) *gorm.DB
-// 	First(interface{}, ...interface{}) *gorm.DB
-// }
-
-// type UserRepository struct {
-// 	Database
-// }
-
 type UserRepository struct {
 	*gorm.DB
 }

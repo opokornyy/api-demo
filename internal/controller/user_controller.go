@@ -30,14 +30,14 @@ func NewUserController(repo UserRepository, validate *validator.Validate) *UserC
 }
 
 func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
-	req, err := parseCreateUserBody(r, uc.validate)
+	req, err := parseRequestBody(r, uc.validate)
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	// Convert request to user model
-	user, err := convertRequestToUser(req)
+	user, err := convertRequestToUserModel(req)
 	if err != nil {
 		log.Error().Err(err).Msgf("failed to parse request: %v", err)
 		respondWithError(w, http.StatusInternalServerError, "failed to parse request to user")
@@ -51,7 +51,7 @@ func (uc *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Info().Msgf("User created: %+v", req)
+	log.Info().Msgf("User created: %+v", user)
 	respondWithJSON(w, http.StatusCreated, user)
 }
 
@@ -78,7 +78,7 @@ func (uc *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, user)
 }
 
-func parseCreateUserBody(r *http.Request, validate *validator.Validate) (*schema.CreateUserRequest, error) {
+func parseRequestBody(r *http.Request, validate *validator.Validate) (*schema.CreateUserRequest, error) {
 	var req schema.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		log.Error().Err(err).Msgf("invalid json body: %v", err)
@@ -94,7 +94,7 @@ func parseCreateUserBody(r *http.Request, validate *validator.Validate) (*schema
 	return &req, nil
 }
 
-func convertRequestToUser(req *schema.CreateUserRequest) (*model.User, error) {
+func convertRequestToUserModel(req *schema.CreateUserRequest) (*model.User, error) {
 	// Parse DateOfBirth from string to time.Time
 	parsedTime, err := time.Parse(time.RFC3339, req.DateOfBirth)
 	if err != nil {
