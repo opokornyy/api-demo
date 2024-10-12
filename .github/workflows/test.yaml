@@ -35,7 +35,7 @@ jobs:
         run: go build -v ./...
 
       - name: Integration Tests
-        run: go test ./tests/integration -v
+        run: go test ./test/integration -v
         env:
           DATABASE_URL: postgresql://testUser:passw0rd@localhost:5432/userTestDb
           SERVER_URL: 0.0.0.0:8080  
