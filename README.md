@@ -1,5 +1,30 @@
 # api-demo
 
+## HOW TO RUN
+
+### Run containerized app
+
+```bash
+docker compose up -d --build
+```
+
+### Run tests
+
+```bash
+# Run database
+docker compose up -d db
+
+# Set up ENV
+export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/userDb"
+export SERVER_URL="0.0.0.0:8080"
+
+# Run integration tests
+make integration-test
+
+# Run unit tests
+make test
+```
+
 ## Create User Request
 
 ### Testing CURLs
@@ -28,4 +53,4 @@ curl "http://localhost:8080/user/26908e04-868c-4d8e-85f8-6b1284dcf750"
 - finish CRUD endpoints
 - implement prometheus metrics
 - create deployment manifests for k8s
-- implement health check for db
+- implement health checks
