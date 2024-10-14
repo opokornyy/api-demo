@@ -64,8 +64,8 @@ func Run() {
 	UserController := controller.NewUserController(userRepository, validate)
 
 	// Register user handlers
-	router.HandleFunc("/user", UserController.CreateUser).Methods("POST")
-	router.HandleFunc("/user/{id}", UserController.GetUser).Methods("GET")
+	router.HandleFunc("/save", UserController.CreateUser).Methods("POST")
+	router.HandleFunc("/{id}", UserController.GetUser).Methods("GET")
 
 	// Create http server
 	srv := &http.Server{

@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	serverURL = "http://localhost:8080/user"
+	serverURL = "http://localhost:8080/"
 
 	testUUID        = "86f8cebb-7cfb-41b7-9c2c-84cfc3a3dda2"
 	notExistingUUID = "86f8cebb-7cfb-41b7-9c2c-84cfc3a3dda3"
@@ -54,7 +54,7 @@ func TestMain(m *testing.M) {
 
 func Test_CreateAndRetrieveUser_Succeeds(t *testing.T) {
 	// Create a new user
-	resp, err := http.Post(serverURL, "application/json", strings.NewReader(userData))
+	resp, err := http.Post(serverURL+"save", "application/json", strings.NewReader(userData))
 	assert.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -62,7 +62,7 @@ func Test_CreateAndRetrieveUser_Succeeds(t *testing.T) {
 	assert.Equal(t, http.StatusCreated, resp.StatusCode)
 
 	// Retrieve the user you just created
-	resp, err = http.Get(fmt.Sprintf(serverURL+"/%s", testUUID))
+	resp, err = http.Get(fmt.Sprintf(serverURL+"%s", testUUID))
 	assert.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -77,7 +77,7 @@ func Test_CreateAndRetrieveUser_Succeeds(t *testing.T) {
 
 func Test_CreateUser_InvalidRequest_Returns_BadRequest(t *testing.T) {
 	// Create a new user with invalid data
-	resp, err := http.Post(serverURL, "application/json", strings.NewReader(invalidUserData))
+	resp, err := http.Post(serverURL+"save", "application/json", strings.NewReader(invalidUserData))
 	assert.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -87,7 +87,7 @@ func Test_CreateUser_InvalidRequest_Returns_BadRequest(t *testing.T) {
 
 func Test_GetUser_NonExisting_User_Returns_NotFound(t *testing.T) {
 	// Retrieve non-existing user
-	resp, err := http.Get(fmt.Sprintf(serverURL+"/%s", notExistingUUID))
+	resp, err := http.Get(fmt.Sprintf(serverURL+"%s", notExistingUUID))
 	assert.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -97,7 +97,7 @@ func Test_GetUser_NonExisting_User_Returns_NotFound(t *testing.T) {
 
 func Test_GetUser_InvalidUUID_Returns_BadRequest(t *testing.T) {
 	// Retrieve non-existing user
-	resp, err := http.Get(serverURL + "/invalid-uuid")
+	resp, err := http.Get(serverURL + "invalid-uuid")
 	assert.NoError(t, err)
 	defer resp.Body.Close()
 

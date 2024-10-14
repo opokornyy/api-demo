@@ -30,7 +30,7 @@ make test
 ### Create User Request
 
 ```bash
-curl -X "POST" "http://localhost:8080/user" \
+curl -X "POST" "http://localhost:8080/save" \
  -H 'Content-Type: text/plain; charset=utf-8' \
  -d $'{
     "id": "26908e04-868c-4d8e-85f8-6b1284dcf750",
@@ -43,7 +43,7 @@ curl -X "POST" "http://localhost:8080/user" \
 ### Get User Request
 
 ```bash
-curl "http://localhost:8080/user/26908e04-868c-4d8e-85f8-6b1284dcf750"
+curl "http://localhost:8080/26908e04-868c-4d8e-85f8-6b1284dcf750"
 ```
 
 ### Future work

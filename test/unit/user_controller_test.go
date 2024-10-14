@@ -50,7 +50,7 @@ func TestCreateUser(t *testing.T) {
 	assert.NoError(t, err)
 
 	// Create test request
-	req, err := http.NewRequest("POST", "/user", bytes.NewBuffer(reqBodyJSON))
+	req, err := http.NewRequest("POST", "/save", bytes.NewBuffer(reqBodyJSON))
 	if err != nil {
 		t.Fatal(err)
 	}
